@@ -1,0 +1,50 @@
+# =========================================
+# Configuración global
+# =========================================
+spring:
+  profiles:
+    active: local   # Perfil activo por defecto (puedes cambiarlo a prod desde IDE o línea de comandos)
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3307/losAngelesWeb_db
+    username: root
+    password: kira
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  application:
+    name: news-service
+  servlet:
+      multipart:
+        max-file-size: 20MB
+        max-request-size: 20MB
+
+server:
+  port: 8080
+
+# =========================================
+# Configuración para perfil LOCAL
+# =========================================
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+app:
+  upload-dir: C:/tmp/uploads
+
+# =========================================
+# Configuración para perfil PRODUCCIÓN
+# =========================================
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+app:
+  upload-dir: /var/www/losangelesweb/uploads
