@@ -1,7 +1,8 @@
 package com.clubatletismolosangeles.losangeleswebback.model;
 
 public enum Categoria {
-    COMPETICION,
+    COMPETICIÓN,
     ESCUELA,
-    EVENTOS
+    EVENTOS,
+    OTROS
 }

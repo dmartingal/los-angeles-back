@@ -145,4 +145,52 @@ public class NoticiaController {
 
         return dto;
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NoticiaDTO> obtenerNoticia(@PathVariable Long id) {
+        Noticia noticia = noticiaService.buscarPorId(id);
+        return ResponseEntity.ok(convertirANoticiaDTO(noticia));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<NoticiaDTO> actualizarNoticia(
+            @PathVariable Long id,
+            @RequestParam("titulo") String titulo,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("categoria") String categoria,
+            @RequestParam(value = "fotoPrincipal", required = false) MultipartFile fotoPrincipal,
+            @RequestParam(value = "fotosAdicionales", required = false) List<MultipartFile> fotosAdicionales
+    ) {
+
+        Noticia noticia = noticiaService.buscarPorId(id);
+
+        noticia.setTitulo(titulo);
+        noticia.setDescripcion(descripcion);
+        noticia.setCategoria(Enum.valueOf(com.clubatletismolosangeles.losangeleswebback.model.Categoria.class, categoria));
+
+        // Si trae nueva foto principal → reemplazar
+        if (fotoPrincipal != null && !fotoPrincipal.isEmpty()) {
+            String nuevoNombre = guardarArchivoUnico(fotoPrincipal);
+            noticia.setImagenUrl(nuevoNombre);
+        }
+
+        // Si trae fotos adicionales → reemplazar listado
+        if (fotosAdicionales != null && !fotosAdicionales.isEmpty()) {
+            List<String> nuevas = fotosAdicionales.stream()
+                    .map(this::guardarArchivoUnico)
+                    .toList();
+            noticia.setImagenesSecundarias(nuevas);
+        }
+
+        Noticia guardada = noticiaService.actualizarNoticia(noticia);
+
+        return ResponseEntity.ok(convertirANoticiaDTO(guardada));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarNoticia(@PathVariable Long id) {
+        noticiaService.eliminarNoticia(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
