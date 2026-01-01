@@ -22,6 +22,13 @@ spring:
         max-file-size: 20MB
         max-request-size: 20MB
 
+app:
+  upload-dir: /var/www/losangelesweb/uploads
+  jwt:
+    # Recuerda: la clave debe tener al menos 32 caracteres para el algoritmo HS256
+    secret: "EstaEsUnaClaveSuperSecretaDePruebaParaElClubDeAtletismoLosAngeles12345"
+    expirationMinutes: 180
+
 server:
   port: 8080
 
@@ -45,6 +52,3 @@ spring:
   config:
     activate:
       on-profile: prod
-
-app:
-  upload-dir: /var/www/losangelesweb/uploads
